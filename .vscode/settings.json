@@ -1,0 +1,9 @@
+{
+  "[rust]": {
+    "editor.formatOnSave": true,
+    "editor.rulers": [ 100 ],
+    "editor.tabSize": 2
+  },
+    // close inner type hints
+  "rust-analyzer.inlayHints.typeHints.enable": false,
+}
