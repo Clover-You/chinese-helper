@@ -1,7 +1,20 @@
 [package]
-name = "rust-template"
+name = "chinese-helper"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+opt-level = 'z'  # Optimize for size
+lto = true
+codegen-units = 1
+panic = 'abort'
+
 [dependencies]
-dotenv = "0.15.0"
+reqwest = { version = "0.12.8", features = ["json"] }
+scraper = "0.20.0"
+serde = { version = "1.0.210", features = ["derive"] }
+tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
+
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-gcc-ar"
