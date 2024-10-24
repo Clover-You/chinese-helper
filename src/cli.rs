@@ -31,9 +31,9 @@ impl CliType {
 // const CLI_TYPS: &[&str] = &["idiom", "word", "lexicon"];
 
 #[derive(StructOpt, Debug)]
-#[structopt(name = "ch")]
+#[structopt(name = "Chinese Helper")]
 pub struct Cli {
   pub content: String,
-  #[structopt(short = "t", long = "type", default_value = "idiom", possible_values = CliType::support())]
+  #[structopt(short = "t", long = "type", default_value = "idiom", possible_values = CliType::support(), help = "Query classification.")]
   pub typ: CliType,
 }
