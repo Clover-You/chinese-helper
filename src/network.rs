@@ -1,5 +1,5 @@
-use crate::models::ProverbsData;
 use crate::models::SearchParams;
+use crate::{models::idiom::Idiom, status_code::StatusEnum};
 use reqwest::Error;
 use scraper::{Html, Selector};
 
@@ -19,14 +19,14 @@ pub async fn fetch_target_uri(params: SearchParams) -> Result<String, Error> {
     .next()
     .map(|element| element.attr("href").unwrap())
     .unwrap_or_else(|| {
-      println!("NO result");
+      println!("{:?}", StatusEnum::NO_RESULT);
       std::process::exit(1);
     });
 
   Ok(uri.to_string())
 }
 
-pub async fn fetch_proverbs_data(url: &str) -> Result<ProverbsData, Error> {
+pub async fn fetch_idiom_data(url: &str) -> Result<Idiom, Error> {
   let res = reqwest::get(url).await?;
   let html_str = res.text().await?;
 
@@ -35,7 +35,7 @@ pub async fn fetch_proverbs_data(url: &str) -> Result<ProverbsData, Error> {
   let tip_selector = Selector::parse(".tip").unwrap();
 
   let mut category = String::new();
-  let mut proverbs = ProverbsData::default();
+  let mut proverbs = Idiom::default();
 
   if let Some(detail_element) = document.select(&detail_selector).next() {
     for el in detail_element.child_elements() {
@@ -65,12 +65,7 @@ fn adjust_content_based_on_tip(content_text: String, tip_text: &str) -> String {
   content_text.chars().skip(tip_len).collect()
 }
 
-fn update_proverbs_data(
-  category: &str,
-  tip_text: &str,
-  proverbs: &mut ProverbsData,
-  content: String,
-) {
+fn update_proverbs_data(category: &str, tip_text: &str, proverbs: &mut Idiom, content: String) {
   match category {
     "意思解释" => match tip_text {
       "基本解释" => proverbs.explanation = content,

@@ -13,6 +13,7 @@ panic = 'abort'
 reqwest = { version = "0.12.8", features = ["json"] }
 scraper = "0.20.0"
 serde = { version = "1.0.210", features = ["derive"] }
+structopt = "0.3.26"
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
 
 [target.x86_64-unknown-linux-musl]

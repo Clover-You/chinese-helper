@@ -1,26 +1,29 @@
+mod cli;
+mod glue;
 mod models;
 mod network;
+mod status_code;
 mod utils;
 
-use models::SearchParams;
-use utils::read_user_input;
+use cli::Cli;
+use glue::UniversalTranslator;
+use models::idiom::Idiom;
+use status_code::StatusEnum;
+use structopt::StructOpt;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-  loop {
-    let user_input = read_user_input()?;
+  let args = Cli::from_args();
 
-    let params = SearchParams {
-      tbname: "chengyu".into(),
-      show: "title".into(),
-      tempid: 3,
-      keyboard: user_input.trim().into(),
-    };
+  let idiom_interpreter = Idiom::default();
 
-    let uri = network::fetch_target_uri(params).await?;
-    let target_url = format!("https://www.xhzidian.com/{}", uri);
-
-    let proverbs = network::fetch_proverbs_data(&target_url).await?;
-    println!("{:?}", proverbs);
+  match args.typ {
+    cli::CliType::Idiom => {
+      let result = idiom_interpreter.translate(&args.content).await?;
+      println!("{:?}", result);
+    }
+    _ => println!("{:?}", StatusEnum::UNDER_DEVELOPMENT),
   }
+
+  Ok(())
 }
